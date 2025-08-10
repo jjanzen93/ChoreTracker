@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chore Tracker</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Chore Tracker  erledigt! ✅</h1>
+            <div class="balance-container">
+                <h2>Current Balance</h2>
+                <p id="balance-display">0</p>
+            </div>
+        </header>
+
+        <main class="main-content">
+            <!-- Chores Section -->
+            <section class="card">
+                <div class="card-header">
+                    <h2>Chores</h2>
+                    <div class="sort-container">
+                        <label for="chore-sort">Sort by:</label>
+                        <select id="chore-sort">
+                            <option value="value-asc">Value (Low to High)</option>
+                            <option value="value-desc">Value (High to Low)</option>
+                            <option value="alpha">Alphabetical</option>
+                        </select>
+                    </div>
+                </div>
+                <form id="add-chore-form">
+                    <input type="text" id="chore-name-input" placeholder="Chore name" required>
+                    <input type="number" id="chore-points-input" placeholder="Points" min="1" required>
+                    <button type="submit">Add Chore</button>
+                </form>
+                <ul id="chore-list" class="item-list"></ul>
+            </section>
+
+            <!-- Rewards Section -->
+            <section class="card">
+                 <div class="card-header">
+                    <h2>Rewards</h2>
+                    <div class="sort-container">
+                        <label for="reward-sort">Sort by:</label>
+                        <select id="reward-sort">
+                            <option value="value-desc">Value (High to Low)</option>
+                            <option value="value-asc">Value (Low to High)</option>
+                            <option value="alpha">Alphabetical</option>
+                        </select>
+                    </div>
+                </div>
+                <form id="add-reward-form">
+                    <input type="text" id="reward-name-input" placeholder="Reward name" required>
+                    <input type="number" id="reward-cost-input" placeholder="Cost" min="1" required>
+                    <button type="submit">Add Reward</button>
+                </form>
+                <ul id="reward-list" class="item-list"></ul>
+            </section>
+        </main>
+        
+        <div class="bottom-section">
+            <!-- Transaction History Section -->
+            <section class="card">
+                <h2>Transaction History</h2>
+                <ul id="transaction-list" class="transaction-list"></ul>
+            </section>
+
+            <!-- Data Management Section -->
+            <section class="card">
+                <h2>Data Management 💾</h2>
+                <p>Save your data to a file or load it from a backup.</p>
+                <div class="data-buttons">
+                    <button id="download-data-btn">Download Data (JSON)</button>
+                    <label class="file-upload-label">
+                        Upload Data (JSON)
+                        <input type="file" id="upload-data-input" accept=".json">
+                    </label>
+                </div>
+            </section>
+        </div>
+    </div>
+    <script src="app.js"></script>
+</body>
+</html>
