@@ -12,10 +12,13 @@
 <body>
     <div class="container">
         <header>
-            <h1>Chore Tracker  erledigt! ✅</h1>
-            <div class="balance-container">
-                <h2>Current Balance</h2>
-                <p id="balance-display">0</p>
+            <h1>Chore Tracker</h1>
+            <div class="header-controls">
+                <div class="balance-container">
+                    <h2>Current Balance</h2>
+                    <p id="balance-display">0</p>
+                </div>
+                <button id="settings-btn">Settings ⚙️</button>
             </div>
         </header>
 
@@ -62,28 +65,45 @@
                 <ul id="reward-list" class="item-list"></ul>
             </section>
         </main>
-        
-        <div class="bottom-section">
-            <!-- Transaction History Section -->
-            <section class="card">
-                <h2>Transaction History</h2>
-                <ul id="transaction-list" class="transaction-list"></ul>
-            </section>
+    </div>
 
-            <!-- Data Management Section -->
-            <section class="card">
-                <h2>Data Management 💾</h2>
-                <p>Save your data to a file or load it from a backup.</p>
-                <div class="data-buttons">
-                    <button id="download-data-btn">Download Data (JSON)</button>
-                    <label class="file-upload-label">
-                        Upload Data (JSON)
-                        <input type="file" id="upload-data-input" accept=".json">
-                    </label>
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <button id="close-modal-btn" class="close-btn">&times;</button>
+            <h2>Settings</h2>
+            <div class="modal-sections">
+                <section class="card">
+                    <h3>Transaction History</h3>
+                    <ul id="transaction-list" class="transaction-list"></ul>
+                </section>
+                <div class="settings-column">
+                    <section class="card">
+                        <h3>Theme</h3>
+                        <div class="setting-item">
+                            <label for="dark-mode-toggle">Dark Mode</label>
+                            <label class="switch">
+                                <input type="checkbox" id="dark-mode-toggle">
+                                <span class="slider round"></span>
+                            </label>
+                        </div>
+                    </section>
+                    <section class="card">
+                        <h3>Data Management 💾</h3>
+                        <p>Save your data to a file or load it from a backup.</p>
+                        <div class="data-buttons">
+                            <button id="download-data-btn">Download Data (JSON)</button>
+                            <label class="file-upload-label">
+                                Upload Data (JSON)
+                                <input type="file" id="upload-data-input" accept=".json">
+                            </label>
+                        </div>
+                    </section>
                 </div>
-            </section>
+            </div>
         </div>
     </div>
+
     <script src="app.js"></script>
 </body>
 </html>

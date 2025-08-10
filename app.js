@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // DOM Elements
+    // --- DOM Elements --- 
     const balanceDisplay = document.getElementById('balance-display');
     
     const addChoreForm = document.getElementById('add-chore-form');
@@ -14,19 +14,24 @@ document.addEventListener('DOMContentLoaded', () => {
     const rewardList = document.getElementById('reward-list');
     const rewardSort = document.getElementById('reward-sort');
 
+    // --- Modal elements --- 
+    const settingsBtn = document.getElementById('settings-btn');
+    const settingsModal = document.getElementById('settings-modal');
+    const closeModalBtn = document.getElementById('close-modal-btn');
     const transactionList = document.getElementById('transaction-list');
-
     const downloadBtn = document.getElementById('download-data-btn');
     const uploadInput = document.getElementById('upload-data-input');
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
 
-    // Application State
+    // --- Application State --- 
     let state = {
         balance: 0,
         chores: [],
         rewards: [],
         transactions: [],
-        choreSortOrder: 'value-asc', // Default sort for chores
-        rewardSortOrder: 'value-desc', // Default sort for rewards
+        choreSortOrder: 'value-asc',
+        rewardSortOrder: 'value-desc',
+        isDarkMode: false,
     };
 
     // --- State Management ---
@@ -40,7 +45,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const loadState = () => {
         const savedState = localStorage.getItem('choreTrackerState');
         if (savedState) {
-            // Merge saved state with defaults to ensure new properties exist
             const loaded = JSON.parse(savedState);
             state = {...state, ...loaded};
         }
@@ -48,6 +52,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // --- Rendering ---
     const render = () => {
+        // Update theme
+        document.body.classList.toggle('dark-mode', state.isDarkMode);
+        darkModeToggle.checked = state.isDarkMode;
+
         balanceDisplay.textContent = state.balance;
         choreSort.value = state.choreSortOrder;
         rewardSort.value = state.rewardSortOrder;
@@ -254,6 +262,11 @@ document.addEventListener('DOMContentLoaded', () => {
         render();
     });
 
+    darkModeToggle.addEventListener('change', () => {
+        state.isDarkMode = darkModeToggle.checked;
+        render();
+    });
+
     downloadBtn.addEventListener('click', () => {
         const stateToSave = JSON.parse(JSON.stringify(state));
         stateToSave.chores.forEach(c => delete c.isEditing);
@@ -289,6 +302,21 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         reader.readAsText(file);
         uploadInput.value = '';
+    });
+
+    // --- Modal event listeners --- 
+    settingsBtn.addEventListener('click', () => {
+        settingsModal.classList.remove('hidden');
+    });
+
+    closeModalBtn.addEventListener('click', () => {
+        settingsModal.classList.add('hidden');
+    });
+
+    settingsModal.addEventListener('click', (e) => {
+        if (e.target === settingsModal) {
+            settingsModal.classList.add('hidden');
+        }
     });
 
     // --- Initial Load ---
