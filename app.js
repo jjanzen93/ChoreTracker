@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- DOM Elements --- 
+    // DOM Elements
     const balanceDisplay = document.getElementById('balance-display');
     
     const addChoreForm = document.getElementById('add-chore-form');
@@ -14,7 +14,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const rewardList = document.getElementById('reward-list');
     const rewardSort = document.getElementById('reward-sort');
 
-    // --- Modal elements --- 
+    const todayList = document.getElementById('today-list');
+
+    // Modal elements
     const settingsBtn = document.getElementById('settings-btn');
     const settingsModal = document.getElementById('settings-modal');
     const closeModalBtn = document.getElementById('close-modal-btn');
@@ -23,18 +25,34 @@ document.addEventListener('DOMContentLoaded', () => {
     const uploadInput = document.getElementById('upload-data-input');
     const darkModeToggle = document.getElementById('dark-mode-toggle');
 
-    // --- Application State --- 
+    // Application State
     let state = {
         balance: 0,
         chores: [],
         rewards: [],
         transactions: [],
+        lastResetDate: new Date().toLocaleDateString(),
         choreSortOrder: 'value-asc',
         rewardSortOrder: 'value-desc',
         isDarkMode: false,
     };
 
-    // --- State Management ---
+    // Daily Reset Logic
+    const checkAndResetDaily = () => {
+        const today = new Date().toLocaleDateString();
+        if (today !== state.lastResetDate) {
+            // Filter out yesterday's chore completions from transactions
+            state.transactions = state.transactions.filter(tx => {
+                const txDate = new Date(tx.id).toLocaleDateString();
+                // Keep all debits (rewards) and any credits that are not from yesterday
+                return tx.type === 'debit' || txDate === today;
+            });
+            state.lastResetDate = today;
+            render();
+        }
+    };
+
+    // State Management
     const saveState = () => {
         const stateToSave = JSON.parse(JSON.stringify(state));
         stateToSave.chores.forEach(c => delete c.isEditing);
@@ -50,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // --- Rendering ---
+    // Rendering
     const render = () => {
         // Update theme
         document.body.classList.toggle('dark-mode', state.isDarkMode);
@@ -92,6 +110,22 @@ document.addEventListener('DOMContentLoaded', () => {
             }
             choreList.appendChild(li);
         });
+
+        // Render Today's Accomplishments
+        todayList.innerHTML = '';
+        const todayString = new Date().toLocaleDateString();
+        const todaysChores = state.transactions.filter(tx => tx.type === 'credit' && new Date(tx.id).toLocaleDateString() === todayString);
+        
+        if (todaysChores.length === 0) {
+            todayList.innerHTML = '<li>No chores completed today.</li>';
+        } else {
+            todaysChores.forEach(tx => {
+                const li = document.createElement('li');
+                li.innerHTML = `<span class="item-info">${tx.description.replace('Completed: ', '')} <span class="item-points">(+${tx.amount})</span></span>`;
+                todayList.appendChild(li);
+            });
+        }
+
 
         // Sort and Render Rewards
         let sortedRewards = [...state.rewards];
@@ -148,7 +182,7 @@ document.addEventListener('DOMContentLoaded', () => {
         saveState();
     };
 
-    // --- Event Handlers ---
+    // Event Handlers
     addChoreForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const name = choreNameInput.value.trim();
@@ -304,7 +338,7 @@ document.addEventListener('DOMContentLoaded', () => {
         uploadInput.value = '';
     });
 
-    // --- Modal event listeners --- 
+    // Modal event listeners
     settingsBtn.addEventListener('click', () => {
         settingsModal.classList.remove('hidden');
     });
@@ -319,7 +353,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // --- Initial Load ---
+    // Initial Load
     loadState();
+    checkAndResetDaily(); // Check if a new day has started
     render();
+
+    // Set an interval to check for the new day
+    setInterval(checkAndResetDaily, 60000); // Check every minute
 });
