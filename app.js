@@ -37,22 +37,19 @@ document.addEventListener('DOMContentLoaded', () => {
         isDarkMode: false,
     };
 
-    // Daily Reset Logic
+    // Daily Reset Logic 
     const checkAndResetDaily = () => {
         const today = new Date().toLocaleDateString();
         if (today !== state.lastResetDate) {
-            // Filter out yesterday's chore completions from transactions
-            state.transactions = state.transactions.filter(tx => {
-                const txDate = new Date(tx.id).toLocaleDateString();
-                // Keep all debits (rewards) and any credits that are not from yesterday
-                return tx.type === 'debit' || txDate === today;
-            });
+            // The day has changed. Simply update the date and re-render.
+            // The render function will now show an empty "Today's Accomplishments" list
+            // because its logic is based on the current date. The main transaction history is not touched.
             state.lastResetDate = today;
             render();
         }
     };
 
-    // State Management
+    // State Management 
     const saveState = () => {
         const stateToSave = JSON.parse(JSON.stringify(state));
         stateToSave.chores.forEach(c => delete c.isEditing);
@@ -68,7 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    // Rendering
+    // Rendering 
     const render = () => {
         // Update theme
         document.body.classList.toggle('dark-mode', state.isDarkMode);
@@ -182,7 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
         saveState();
     };
 
-    // Event Handlers
+    // Event Handlers 
     addChoreForm.addEventListener('submit', (e) => {
         e.preventDefault();
         const name = choreNameInput.value.trim();
